@@ -23,7 +23,6 @@ var port = flag.String("port", "8888", "Port for server")
 var host = flag.String("host", "127.0.0.1:2735", "Docker host")
 
 var contextPath = "/"
-var container = ""
 
 func main() {
 	flag.Parse()
@@ -37,21 +36,11 @@ func main() {
 	if err := http.ListenAndServe(":"+*port, nil); err != nil {
 		panic(err)
 	}
-	
-	container = os.Getenv("CONTAINER_NAME")
-    if len(container) == 0 {
-		fmt.Fprintf(os.Stderr, "[ERROR] environmental variable \"CONTAINER_NAME\" is not setted.")
-		os.Exit(1)
-    }	
-    
-	if container == "" {
-		fmt.Fprintf(os.Stderr, "[ERROR] this container does not exists.")
-		os.Exit(1)
-	}
 }
 
 func ExecContainer(ws *websocket.Conn) {
 	wsParams := strings.Split(ws.Request().URL.Path[len(contextPath + "/exec/"):], ",")
+	container := os.Getenv("CONTAINER_NAME");
 	cmd, _ := base64.StdEncoding.DecodeString(wsParams[1])
 		
 	if container == "" {

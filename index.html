@@ -37,12 +37,14 @@
             return false;
         }
         
+        containerId = "pppp";
+        
         command = getQueryVar('cmd');
         if (!command) {
             command = '/bin/bash';
         }
 
-	websocket = new WebSocket("ws://" + window.location.hostname + ":" + window.location.port + window.location.pathname + "exec/" + window.btoa(command));
+	websocket = new WebSocket("ws://" + window.location.hostname + ":" + window.location.port + window.location.pathname + "exec/" + containerId + ',' + window.btoa(command));
 
         websocket.onopen = function(evt) {
 			term = new Terminal({
